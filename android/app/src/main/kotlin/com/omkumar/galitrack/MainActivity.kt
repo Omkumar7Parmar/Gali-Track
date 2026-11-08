@@ -1,4 +1,4 @@
-package com.example.pedestrian_road_tracker
+package com.omkumar.galitrack
 
 import io.flutter.embedding.android.FlutterActivity
 

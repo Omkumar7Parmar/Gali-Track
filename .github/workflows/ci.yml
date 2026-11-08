@@ -1,0 +1,92 @@
+# Runs on every push to main and every pull request. Each step protects one
+# named contract; a red step blocks the merge.
+#
+# What CI cannot prove: real GPS, background tracking on OxygenOS, battery
+# use, and how the app looks and feels on a real phone. Those are checked by
+# hand on the OnePlus Nord CE 3 before every release.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Must match the Flutter used locally (pubspec.yaml requires >= 3.41.2).
+  # Bump it only in a dedicated pull request.
+  FLUTTER_VERSION: "3.41.2"
+
+jobs:
+  verify:
+    name: Format, analyze and test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5 # VERIFY: confirm the current major version
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install SQLite for the database tests
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
+      - name: Get packages
+        run: flutter pub get
+
+      # Contract: generated code is never committed, so it is rebuilt before
+      # anything reads it.
+      - name: Generate code (Drift and localizations)
+        run: |
+          dart run build_runner build
+          flutter gen-l10n
+
+      # Contract: dart format owns all whitespace. Only files git tracks are
+      # checked, so generated code is left alone.
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed $(git ls-files '*.dart')
+
+      # Contract: zero analyzer findings, infos included.
+      - name: Analyze
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      # Contract: behaviour, database limits and source-policy rules hold.
+      # A random order catches tests that secretly depend on each other.
+      - name: Test
+        run: flutter test --test-randomize-ordering-seed random
+
+  build-android:
+    name: Build Android debug APK
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5 # VERIFY: confirm the current major version
+      - uses: actions/setup-java@v4 # VERIFY: confirm the current major version
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Get packages and generate code
+        run: |
+          flutter pub get
+          dart run build_runner build
+          flutter gen-l10n
+
+      # Contract: the app still compiles for Android: Gradle, plugins and
+      # the manifest. Release signing arrives with the Play Store work.
+      - name: Build debug APK
+        run: flutter build apk --debug

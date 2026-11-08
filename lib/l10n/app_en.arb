@@ -1,0 +1,184 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "GaliTrack",
+  "@appTitle": { "description": "App name. Not translated." },
+
+  "actionNext": "Next",
+  "@actionNext": { "description": "Onboarding button that moves to the next page." },
+  "actionBack": "Back",
+  "@actionBack": { "description": "Onboarding button that returns to the previous page." },
+  "actionStartWalking": "Start walking",
+  "@actionStartWalking": { "description": "Last onboarding button; saves the answers and opens the app." },
+  "actionTryAgain": "Try again",
+  "@actionTryAgain": { "description": "Retry button on an error state." },
+  "errorSaveFailed": "Couldn't save that. Please try again.",
+  "@errorSaveFailed": { "description": "Snack bar shown when a setting or answer could not be saved." },
+
+  "onboardingProgress": "Step {current} of {total}",
+  "@onboardingProgress": {
+    "description": "Screen reader label for the onboarding page dots.",
+    "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } }
+  },
+
+  "welcomeHeadline": "Walk your galis",
+  "@welcomeHeadline": { "description": "Welcome page headline. 'Galis' are narrow lanes." },
+  "welcomeBody": "Track walks on the streets you know, from wide roads to the narrowest lanes.",
+  "@welcomeBody": { "description": "Welcome page introduction." },
+  "privacyNoAccount": "No account, no sign-in",
+  "@privacyNoAccount": { "description": "Welcome page privacy point." },
+  "privacyOnDevice": "Your walks stay on your phone",
+  "@privacyOnDevice": { "description": "Welcome page privacy point." },
+  "privacyOffline": "Records walks without internet",
+  "@privacyOffline": { "description": "Welcome page privacy point." },
+
+  "profileHeadline": "About you",
+  "@profileHeadline": { "description": "Profile page headline." },
+  "profileBody": "Your weight is used to estimate calories. It never leaves your phone.",
+  "@profileBody": { "description": "Profile page explanation." },
+  "weightLabel": "Weight",
+  "@weightLabel": { "description": "Label for the weight picker." },
+  "weightValue": "{kilograms} kg",
+  "@weightValue": {
+    "description": "Body weight in kilograms, one decimal place.",
+    "placeholders": {
+      "kilograms": { "type": "double", "format": "decimalPatternDigits", "optionalParameters": { "decimalDigits": 1 } }
+    }
+  },
+  "heightLabel": "Height",
+  "@heightLabel": { "description": "Label for the height picker." },
+  "heightValue": "{centimeters} cm",
+  "@heightValue": {
+    "description": "Body height in whole centimetres.",
+    "placeholders": { "centimeters": { "type": "int", "format": "decimalPattern" } }
+  },
+  "heightToggle": "Add my height (optional)",
+  "@heightToggle": { "description": "Switch that shows the optional height picker." },
+  "heightHint": "Height improves step estimates on phones without a step sensor.",
+  "@heightHint": { "description": "Explains why height is asked for." },
+  "decreaseValue": "Decrease {label}",
+  "@decreaseValue": {
+    "description": "Screen reader label for a minus button, e.g. 'Decrease Weight'.",
+    "placeholders": { "label": { "type": "String" } }
+  },
+  "increaseValue": "Increase {label}",
+  "@increaseValue": {
+    "description": "Screen reader label for a plus button, e.g. 'Increase Weight'.",
+    "placeholders": { "label": { "type": "String" } }
+  },
+
+  "goalHeadline": "Your daily goal",
+  "@goalHeadline": { "description": "Goal page headline." },
+  "goalBody": "Pick what counts towards your day. You can change it later.",
+  "@goalBody": { "description": "Goal page explanation." },
+  "goalTypeSteps": "Steps",
+  "@goalTypeSteps": { "description": "Goal type option: count steps." },
+  "goalTypeDistance": "Distance",
+  "@goalTypeDistance": { "description": "Goal type option: count distance." },
+  "goalTypeBoth": "Both",
+  "@goalTypeBoth": { "description": "Goal type option: count steps and distance." },
+  "stepTargetLabel": "Steps a day",
+  "@stepTargetLabel": { "description": "Label for the daily step target picker." },
+  "stepTargetValue": "{steps} steps",
+  "@stepTargetValue": {
+    "description": "A daily step target, e.g. '6,000 steps'.",
+    "placeholders": { "steps": { "type": "int", "format": "decimalPattern" } }
+  },
+  "distanceTargetLabel": "Distance a day",
+  "@distanceTargetLabel": { "description": "Label for the daily distance target picker." },
+  "distanceTargetValue": "{kilometers} km",
+  "@distanceTargetValue": {
+    "description": "A daily distance target in kilometres, one decimal place.",
+    "placeholders": {
+      "kilometers": { "type": "double", "format": "decimalPatternDigits", "optionalParameters": { "decimalDigits": 1 } }
+    }
+  },
+
+  "themeHeadline": "Choose your look",
+  "@themeHeadline": { "description": "Theme page headline." },
+  "themeBody": "Tap a preview to try it. You can switch any time in Settings.",
+  "@themeBody": { "description": "Theme page explanation." },
+  "themeFollowingPhone": "Until you pick one, GaliTrack follows your phone's setting.",
+  "@themeFollowingPhone": { "description": "Shown on the theme page while no theme has been picked." },
+  "themeLight": "Light",
+  "@themeLight": { "description": "Light theme option." },
+  "themeDark": "Dark",
+  "@themeDark": { "description": "Dark theme option." },
+  "themeSystem": "Phone",
+  "@themeSystem": { "description": "Theme option that follows the phone's light/dark setting." },
+  "themePreviewLabel": "{theme} theme preview",
+  "@themePreviewLabel": {
+    "description": "Screen reader label for a theme preview card, e.g. 'Dark theme preview'.",
+    "placeholders": { "theme": { "type": "String" } }
+  },
+
+  "homeTitle": "Today",
+  "@homeTitle": { "description": "Home screen title." },
+  "settingsTooltip": "Settings",
+  "@settingsTooltip": { "description": "Tooltip of the settings button on the home screen." },
+  "todayGoalTitle": "Today's goal",
+  "@todayGoalTitle": { "description": "Title of the card showing progress towards today's goal." },
+  "stepsProgress": "{current} of {target} steps",
+  "@stepsProgress": {
+    "description": "Steps walked today out of the target, e.g. '1,200 of 6,000 steps'.",
+    "placeholders": {
+      "current": { "type": "int", "format": "decimalPattern" },
+      "target": { "type": "int", "format": "decimalPattern" }
+    }
+  },
+  "distanceProgress": "{current} of {target} km",
+  "@distanceProgress": {
+    "description": "Distance walked today out of the target in km, e.g. '0.8 of 4.0 km'.",
+    "placeholders": {
+      "current": { "type": "double", "format": "decimalPatternDigits", "optionalParameters": { "decimalDigits": 1 } },
+      "target": { "type": "double", "format": "decimalPatternDigits", "optionalParameters": { "decimalDigits": 1 } }
+    }
+  },
+  "ringStepsValue": "{steps}",
+  "@ringStepsValue": {
+    "description": "Big number in the middle of the progress ring: steps walked today.",
+    "placeholders": { "steps": { "type": "int", "format": "decimalPattern" } }
+  },
+  "ringStepsCaption": "steps today",
+  "@ringStepsCaption": { "description": "Caption under the steps number in the progress ring." },
+  "ringDistanceValue": "{kilometers}",
+  "@ringDistanceValue": {
+    "description": "Big number in the middle of the progress ring: km walked today.",
+    "placeholders": {
+      "kilometers": { "type": "double", "format": "decimalPatternDigits", "optionalParameters": { "decimalDigits": 1 } }
+    }
+  },
+  "ringDistanceCaption": "km today",
+  "@ringDistanceCaption": { "description": "Caption under the distance number in the progress ring." },
+  "streakDays":"{count, plural, =0{No streak yet} =1{1-day streak} other{{count}-day streak}}",
+  "@streakDays": {
+    "description": "Number of days in a row the goal was reached.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "streakStartHint": "Reach today's goal to start one.",
+  "@streakStartHint": { "description": "Shown under the streak when there is no streak yet." },
+  "startWalk": "Start walk",
+  "@startWalk": { "description": "Home screen button that starts recording a walk." },
+  "trackingComingSoon": "Walk tracking arrives in the next update.",
+  "@trackingComingSoon": { "description": "Temporary message until tracking is built." },
+  "homeLoadFailed": "Couldn't load today's goal.",
+  "@homeLoadFailed": { "description": "Error state on the home screen." },
+
+  "settingsTitle": "Settings",
+  "@settingsTitle": { "description": "Settings screen title." },
+  "appearanceSection": "Appearance",
+  "@appearanceSection": { "description": "Settings section heading for the theme." },
+  "themeSystemHint": "Phone follows your phone's light or dark setting.",
+  "@themeSystemHint": { "description": "Explains the 'Phone' theme option." },
+  "aboutSection": "About",
+  "@aboutSection": { "description": "Settings section heading for app information." },
+  "openSourceLicences": "Open-source licences",
+  "@openSourceLicences": { "description": "Opens the list of open-source licences." },
+
+  "notFoundTitle": "Page not found",
+  "@notFoundTitle": { "description": "Title of the screen shown for an unknown link." },
+  "notFoundBody": "This screen doesn't exist.",
+  "@notFoundBody": { "description": "Body of the screen shown for an unknown link." },
+  "goToToday": "Go to Today",
+  "@goToToday": { "description": "Button that returns to the home screen." }
+}

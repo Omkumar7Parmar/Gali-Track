@@ -48,3 +48,9 @@ app.*.map.json
 /android/key.properties
 *.jks
 *.keystore
+
+# Generated code: never committed. Regenerate with
+#   dart run build_runner build && flutter gen-l10n
+# CI runs both before analyze and test.
+*.g.dart
+/lib/l10n/app_localizations*.dart

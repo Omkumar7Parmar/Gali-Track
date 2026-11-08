@@ -1,0 +1,21 @@
+# Code generation config. Run from the project root:
+#   dart run build_runner build
+targets:
+  $default:
+    builders:
+      drift_dev:
+        # Only the data layer carries Drift annotations.
+        generate_for:
+          - lib/data/db/**.dart
+          - lib/data/daos/**.dart
+        options:
+          # Used by `dart run drift_dev make-migrations` once the app ships.
+          databases:
+            app_database: lib/data/db/app_database.dart
+          schema_dir: drift_schemas/
+          test_dir: test/drift/
+          sql:
+            dialect: sqlite
+            options:
+              # STRICT tables need SQLite 3.37+; sqlite3 3.x bundles a newer one.
+              version: "3.45"
