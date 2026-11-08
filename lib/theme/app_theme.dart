@@ -22,6 +22,10 @@ ThemeData buildAppTheme(Brightness brightness) {
   final scheme = isDark ? AppColorSchemes.dark : AppColorSchemes.light;
   const shapes = AppShapes.standard;
   final textTheme = _buildTextTheme(scheme);
+  // ThemeData's own text styles have no font sizes: Theme.of() adds them
+  // later. Styles handed straight to component themes need the sizes now,
+  // or the app bar title and button labels fall back to 14 px.
+  final sizedText = Typography.englishLike2021.merge(textTheme);
 
   return ThemeData(
     useMaterial3: true,
@@ -41,7 +45,7 @@ ThemeData buildAppTheme(Brightness brightness) {
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
-      titleTextStyle: textTheme.titleLarge,
+      titleTextStyle: sizedText.titleLarge,
     ),
     cardTheme: CardThemeData(
       elevation: 0,
@@ -53,7 +57,7 @@ ThemeData buildAppTheme(Brightness brightness) {
       style: FilledButton.styleFrom(
         minimumSize: const Size(64, 56),
         shape: shapes.pillShape(),
-        textStyle: textTheme.titleMedium,
+        textStyle: sizedText.titleMedium,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(

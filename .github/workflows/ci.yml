@@ -70,15 +70,32 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5 # VERIFY: confirm the current major version
-      - uses: actions/setup-java@v4 # VERIFY: confirm the current major version
+      # v5 runs on Node 24; v4 targets Node 20, which GitHub has deprecated.
+      # `cache: gradle` keeps the Gradle distribution (downloaded from a
+      # GitHub release) and Gradle's dependencies between runs, keyed on the
+      # Gradle files, so most runs skip those downloads.
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
+          cache: gradle
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
+
+      # The sqlite3 package's build hook downloads a prebuilt SQLite for each
+      # Android ABI and checks its SHA-256. With the verified files cached,
+      # most runs download nothing. The hook re-checks every cached file and
+      # fetches a fresh copy if one doesn't match, and the cache is only saved
+      # when the job succeeds, so a bad download is never kept.
+      - name: Cache prebuilt SQLite
+        uses: actions/cache@v5
+        with:
+          path: .dart_tool/hooks_runner/shared/sqlite3
+          key: sqlite3-prebuilt-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+          restore-keys: sqlite3-prebuilt-${{ runner.os }}-
 
       - name: Get packages and generate code
         run: |
@@ -88,5 +105,24 @@ jobs:
 
       # Contract: the app still compiles for Android: Gradle, plugins and
       # the manifest. Release signing arrives with the Play Store work.
+      # A failed download breaks the build even though nothing in the repo is
+      # wrong: GitHub has served a corrupted SQLite binary (checksum mismatch)
+      # and a 504 for the Gradle distribution. Those download failures get a
+      # single retry after 30 s, from a clean SQLite download. Any other
+      # failure, or a download failure twice, stays red.
       - name: Build debug APK
-        run: flutter build apk --debug
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/build-apk.log"
+          download_failure='Hash of downloaded file|HTTP response code: 5[0-9]{2}|Received status code 5[0-9]{2}|Read timed out|Connection reset'
+          for attempt in 1 2; do
+            if flutter build apk --debug 2>&1 | tee "$log"; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 2 ] || ! grep -qE "$download_failure" "$log"; then
+              exit 1
+            fi
+            echo "::warning::A download failed during the build (see the log above). Retrying once in 30 s."
+            sleep 30
+            rm -rf .dart_tool/hooks_runner/shared/sqlite3
+          done

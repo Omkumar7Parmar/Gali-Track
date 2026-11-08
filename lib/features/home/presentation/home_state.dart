@@ -7,12 +7,15 @@ import 'package:meta/meta.dart';
 @immutable
 final class HomeState {
   const HomeState({
+    required this.date,
     required this.goal,
     required this.stepsToday,
     required this.distanceToday,
     required this.streakDays,
   });
 
+  /// The moment "today" was read, for the date shown in the header.
+  final DateTime date;
   final DailyGoal goal;
   final int stepsToday;
   final Meters distanceToday;
@@ -28,11 +31,13 @@ final class HomeState {
   @override
   bool operator ==(Object other) =>
       other is HomeState &&
+      other.date == date &&
       other.goal == goal &&
       other.stepsToday == stepsToday &&
       other.distanceToday == distanceToday &&
       other.streakDays == streakDays;
 
   @override
-  int get hashCode => Object.hash(goal, stepsToday, distanceToday, streakDays);
+  int get hashCode =>
+      Object.hash(date, goal, stepsToday, distanceToday, streakDays);
 }

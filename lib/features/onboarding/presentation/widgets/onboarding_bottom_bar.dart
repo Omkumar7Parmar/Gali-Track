@@ -41,22 +41,29 @@ class OnboardingBottomBar extends StatelessWidget {
         children: [
           PageDots(current: page, count: pageCount),
           SizedBox(height: spacing.md),
+          // Each button gets up to half the width and keeps to its own edge,
+          // so a long label at a large text size wraps instead of overflowing.
           Row(
             children: [
-              if (back != null)
-                Flexible(
-                  child: TextButton(
-                    onPressed: back,
-                    child: Text(l10n.actionBack),
-                  ),
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: back == null
+                      ? null
+                      : TextButton(
+                          onPressed: back,
+                          child: Text(l10n.actionBack),
+                        ),
                 ),
-              const Spacer(),
-              Flexible(
-                flex: 2,
-                child: FilledButton(
-                  onPressed: isSaving ? null : onNext,
-                  child: Text(
-                    isLastPage ? l10n.actionStartWalking : l10n.actionNext,
+              ),
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: FilledButton(
+                    onPressed: isSaving ? null : onNext,
+                    child: Text(
+                      isLastPage ? l10n.actionStartWalking : l10n.actionNext,
+                    ),
                   ),
                 ),
               ),

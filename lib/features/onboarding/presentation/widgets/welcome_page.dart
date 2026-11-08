@@ -3,6 +3,7 @@ import 'package:galitrack/l10n/app_localizations.dart';
 import 'package:galitrack/theme/app_colors.dart';
 import 'package:galitrack/theme/app_shapes.dart';
 import 'package:galitrack/theme/app_spacing.dart';
+import 'package:galitrack/ui/gali_lanes.dart';
 import 'package:galitrack/ui/progress_ring.dart';
 
 /// Page 1: what the app is, and its privacy promise.
@@ -29,6 +30,7 @@ class WelcomePage extends StatelessWidget {
           header: true,
           child: Text(l10n.welcomeHeadline, style: textTheme.displaySmall),
         ),
+        const _BrushStroke(),
         SizedBox(height: spacing.sm),
         Text(
           l10n.welcomeBody,
@@ -65,11 +67,13 @@ class _HeroRings extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
+            Positioned.fill(child: GaliLanes(color: colors.laneLine)),
             SizedBox.square(
               dimension: _outerSize,
               child: ProgressRing(
                 progress: 0.72,
                 color: colors.stepsAccent,
+                startColor: colors.stepsAccentSoft,
                 trackColor: colors.ringTrack,
                 strokeWidth: shapes.ringStroke,
               ),
@@ -79,6 +83,7 @@ class _HeroRings extends StatelessWidget {
               child: ProgressRing(
                 progress: 0.48,
                 color: colors.distanceAccent,
+                startColor: colors.distanceAccentSoft,
                 trackColor: colors.ringTrack,
                 strokeWidth: shapes.ringStroke,
               ),
@@ -118,4 +123,55 @@ class _PrivacyPoint extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A quick marigold brush stroke under the headline, like a highlighter
+/// swipe on a street map. Decorative only.
+class _BrushStroke extends StatelessWidget {
+  const _BrushStroke();
+
+  static const _width = 148.0;
+  static const _height = 14.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return ExcludeSemantics(
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: CustomPaint(
+          size: const Size(_width, _height),
+          painter: _BrushStrokePainter(colors.stepsAccent),
+        ),
+      ),
+    );
+  }
+}
+
+class _BrushStrokePainter extends CustomPainter {
+  _BrushStrokePainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.height * 0.5
+      ..strokeCap = StrokeCap.round;
+    final path = Path()
+      ..moveTo(size.height * 0.4, size.height * 0.7)
+      ..quadraticBezierTo(
+        size.width * 0.45,
+        size.height * 0.15,
+        size.width - size.height * 0.4,
+        size.height * 0.45,
+      );
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_BrushStrokePainter oldDelegate) =>
+      oldDelegate.color != color;
 }

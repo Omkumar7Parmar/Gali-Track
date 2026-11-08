@@ -5,6 +5,7 @@ import 'package:galitrack/l10n/app_localizations.dart';
 import 'package:galitrack/theme/app_colors.dart';
 import 'package:galitrack/theme/app_shapes.dart';
 import 'package:galitrack/theme/app_spacing.dart';
+import 'package:galitrack/ui/gali_lanes.dart';
 import 'package:galitrack/ui/progress_ring.dart';
 
 /// Today's progress: rings for the goal type, then a line per target.
@@ -27,38 +28,47 @@ class TodayGoalCard extends StatelessWidget {
     final goal = state.goal;
 
     return Card(
-      child: Padding(
-        padding: EdgeInsetsDirectional.all(spacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Semantics(
-              header: true,
-              child: Text(l10n.todayGoalTitle, style: textTheme.titleMedium),
-            ),
-            SizedBox(height: spacing.md),
-            SizedBox(
-              height: _ringAreaHeight,
-              child: _GoalRings(state: state),
-            ),
-            SizedBox(height: spacing.md),
-            if (goal.type.countsSteps)
-              _GoalLine(
-                icon: Icons.directions_walk,
-                color: colors.stepsAccent,
-                text: l10n.stepsProgress(state.stepsToday, goal.stepTarget),
-              ),
-            if (goal.type.countsDistance)
-              _GoalLine(
-                icon: Icons.straighten,
-                color: colors.distanceAccent,
-                text: l10n.distanceProgress(
-                  state.distanceToday.inKilometers,
-                  goal.distanceTarget.inKilometers,
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          Positioned.fill(child: GaliLanes(color: colors.laneLine)),
+          Padding(
+            padding: EdgeInsetsDirectional.all(spacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    l10n.todayGoalTitle,
+                    style: textTheme.titleMedium,
+                  ),
                 ),
-              ),
-          ],
-        ),
+                SizedBox(height: spacing.md),
+                SizedBox(
+                  height: _ringAreaHeight,
+                  child: _GoalRings(state: state),
+                ),
+                SizedBox(height: spacing.md),
+                if (goal.type.countsSteps)
+                  _GoalLine(
+                    icon: Icons.directions_walk,
+                    color: colors.stepsAccent,
+                    text: l10n.stepsProgress(state.stepsToday, goal.stepTarget),
+                  ),
+                if (goal.type.countsDistance)
+                  _GoalLine(
+                    icon: Icons.straighten,
+                    color: colors.distanceAccent,
+                    text: l10n.distanceProgress(
+                      state.distanceToday.inKilometers,
+                      goal.distanceTarget.inKilometers,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -79,12 +89,14 @@ class _GoalRings extends StatelessWidget {
     final stepsRing = ProgressRing(
       progress: state.stepProgress,
       color: colors.stepsAccent,
+      startColor: colors.stepsAccentSoft,
       trackColor: colors.ringTrack,
       strokeWidth: shapes.ringStroke,
     );
     final distanceRing = ProgressRing(
       progress: state.distanceProgress,
       color: colors.distanceAccent,
+      startColor: colors.distanceAccentSoft,
       trackColor: colors.ringTrack,
       strokeWidth: shapes.ringStroke,
     );

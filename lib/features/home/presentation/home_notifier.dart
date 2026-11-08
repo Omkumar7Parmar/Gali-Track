@@ -19,12 +19,13 @@ final StreamNotifierProvider<HomeNotifier, HomeState> homeNotifierProvider =
 class HomeNotifier extends StreamNotifier<HomeState> {
   @override
   Stream<HomeState> build() {
-    final today = CalendarDay.of(ref.watch(clockProvider).now());
+    final now = ref.watch(clockProvider).now();
     return ref
         .watch(goalRepositoryProvider)
-        .watchGoalOn(today)
+        .watchGoalOn(CalendarDay.of(now))
         .map(
           (goal) => HomeState(
+            date: now,
             // Onboarding always saves a goal, so the fallback is just a guard.
             goal: goal ?? DailyGoal.suggested,
             stepsToday: 0,

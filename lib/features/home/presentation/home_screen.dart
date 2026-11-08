@@ -15,19 +15,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     final home = ref.watch(homeNotifierProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.homeTitle),
-        actions: [
-          IconButton(
-            tooltip: l10n.settingsTooltip,
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.push(Routes.settings),
-          ),
-        ],
-      ),
       body: SafeArea(
         child: home.when(
           data: (state) => _HomeContent(state: state),
@@ -50,8 +39,15 @@ class _HomeContent extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final spacing = AppSpacing.of(context);
     return ListView(
-      padding: EdgeInsetsDirectional.all(spacing.lg),
+      padding: EdgeInsetsDirectional.fromSTEB(
+        spacing.lg,
+        spacing.md,
+        spacing.lg,
+        spacing.xl,
+      ),
       children: [
+        _HomeHeader(date: state.date),
+        SizedBox(height: spacing.lg),
         TodayGoalCard(state: state),
         SizedBox(height: spacing.md),
         StreakCard(days: state.streakDays),
@@ -62,6 +58,51 @@ class _HomeContent extends StatelessWidget {
           ),
           icon: const Icon(Icons.directions_walk),
           label: Text(l10n.startWalk),
+        ),
+      ],
+    );
+  }
+}
+
+/// An editorial header: the date as a small coloured eyebrow over a big
+/// "Today", with settings tucked in the corner.
+class _HomeHeader extends StatelessWidget {
+  const _HomeHeader({required this.date});
+
+  final DateTime date;
+
+  static const _eyebrowLetterSpacing = 1.2;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final textTheme = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.todayDate(date),
+                style: textTheme.labelLarge?.copyWith(
+                  color: scheme.primary,
+                  letterSpacing: _eyebrowLetterSpacing,
+                ),
+              ),
+              Semantics(
+                header: true,
+                child: Text(l10n.homeTitle, style: textTheme.displaySmall),
+              ),
+            ],
+          ),
+        ),
+        IconButton.filledTonal(
+          tooltip: l10n.settingsTooltip,
+          icon: const Icon(Icons.settings_outlined),
+          onPressed: () => context.push(Routes.settings),
         ),
       ],
     );
